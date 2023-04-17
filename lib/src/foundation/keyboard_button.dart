@@ -167,8 +167,8 @@ final functionKeyboard = [
       keyboardCharacters: ['r'],
     ),
     const BasicKeyboardButtonConfig(
-      label: r'\f(\Box)',
-      value: r'\f',
+      label: r'\ f(\Box)',
+      value: r'\ f',
       args: [TeXArg.parentheses],
       asTex: true,
     ),
