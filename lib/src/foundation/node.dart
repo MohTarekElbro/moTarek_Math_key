@@ -153,9 +153,9 @@ class TeXFunction extends TeX {
       case TeXArg.brackets:
         return '[';
       case TeXArg.power:
-        return '^';
+        return '^{';
       case TeXArg.subscript:
-        return '_';
+        return '_{';
       default:
         return '(';
     }
@@ -169,9 +169,9 @@ class TeXFunction extends TeX {
       case TeXArg.brackets:
         return ']';
       case TeXArg.power:
-        return '';
+        return '}';
       case TeXArg.subscript:
-        return '';
+        return '}';
       default:
         return ')';
     }
