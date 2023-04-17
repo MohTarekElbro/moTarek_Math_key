@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math' as math;
 
 import 'package:math_expressions/math_expressions.dart' as math;
