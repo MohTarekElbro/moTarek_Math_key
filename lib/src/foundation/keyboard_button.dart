@@ -167,6 +167,18 @@ final functionKeyboard = [
       keyboardCharacters: ['r'],
     ),
     const BasicKeyboardButtonConfig(
+      label: r'\f(\Box)',
+      value: r'\f',
+      args: [TeXArg.parentheses],
+      asTex: true,
+    ),
+    const BasicKeyboardButtonConfig(
+      label: r'\hat f(\Box)',
+      value: r'\hat f',
+      args: [TeXArg.parentheses],
+      asTex: true,
+    ),
+    const BasicKeyboardButtonConfig(
       label: r'\sqrt[\Box]{\Box}',
       value: r'\sqrt',
       args: [TeXArg.brackets, TeXArg.braces],
