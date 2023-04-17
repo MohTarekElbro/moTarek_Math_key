@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -687,16 +689,21 @@ class MathFieldEditingController extends ChangeNotifier {
 
   /// Navigate to the previous node.
   void goBack({bool deleteMode = false}) {
+    String? ex = currentNode.parent?.expression;
+    print("int_goBack expression: $ex");
     final state =
         deleteMode ? currentNode.remove() : currentNode.shiftCursorLeft();
     switch (state) {
       // CASE 1: Courser was moved 1 position to the left in the current node.
       case NavigationState.success:
+        print("int_goBack1: success");
         notifyListeners();
         return;
       // CASE 2: The upcoming tex is a function.
       // We want to step in this function rather than skipping/deleting it.
       case NavigationState.func:
+        print("int_goBack1: func");
+
         final pos = currentNode.courserPosition;
         currentNode = (currentNode.children[pos] as TeXFunction).argNodes.last;
         currentNode.courserPosition = currentNode.children.length;
@@ -705,6 +712,8 @@ class MathFieldEditingController extends ChangeNotifier {
         return;
       // CASE 3: The courser is already at the beginning of this node.
       case NavigationState.end:
+        print("int_goBack1: end");
+
         // If the current node is the root, we can't navigate further.
         if (currentNode.parent == null) {
           return;
@@ -730,10 +739,13 @@ class MathFieldEditingController extends ChangeNotifier {
         }
         notifyListeners();
     }
+    if (ex == "^" && state == NavigationState.end) {
+      print("moved to root");
+      goBack();
+    }
   }
 
-  /// Navigate to the next node.
-  void goNext() {
+  void goNextwithout() {
     final state = currentNode.shiftCursorRight();
     switch (state) {
       // CASE 1: Courser was moved 1 position to the right in the current node.
@@ -776,31 +788,105 @@ class MathFieldEditingController extends ChangeNotifier {
     }
   }
 
+  /// Navigate to the next node.
+  void goNext() {
+    String? ex = currentNode.parent?.expression;
+    print("int_goNext: $ex");
+    final state = currentNode.shiftCursorRight();
+
+    switch (state) {
+      // CASE 1: Courser was moved 1 position to the right in the current node.
+      case NavigationState.success:
+        notifyListeners();
+        return;
+      // CASE 2: The upcoming tex is a function.
+      // We want to step in this function rather than skipping it.
+      case NavigationState.func:
+        final pos = currentNode.courserPosition - 1;
+        currentNode = (currentNode.children[pos] as TeXFunction).argNodes.first;
+        currentNode.courserPosition = 0;
+        currentNode.setCursor();
+        notifyListeners();
+        return;
+      // CASE 3: The courser is already at the end of this node.
+      case NavigationState.end:
+        // If the current node is the root, we can't navigate further.
+        if (currentNode.parent == null) {
+          return;
+        }
+        // Otherwise, the current node must be a function argument.
+        currentNode.removeCursor();
+        final parent = currentNode.parent!;
+        final nextArg = parent.argNodes.indexOf(currentNode) + 1;
+        // If the parent function has another argument after this one,
+        // we jump into that, otherwise we position the courser right
+        // after the function.
+        if (nextArg >= parent.argNodes.length) {
+          currentNode = parent.parent;
+          currentNode.courserPosition =
+              currentNode.children.indexOf(parent) + 1;
+          currentNode.setCursor();
+        } else {
+          currentNode = currentNode.parent!.argNodes[nextArg];
+          currentNode.courserPosition = 0;
+          currentNode.setCursor();
+        }
+        notifyListeners();
+    }
+    if (ex == r"\int_") {
+      goNext();
+    }
+  }
+
   /// Add leaf to the current node.
   void addLeaf(String tex) {
     currentNode.addTeX(TeXLeaf(tex));
     notifyListeners();
+    if (tex == r'\int') {
+      final top = TeXFunction('^', currentNode, [TeXArg.braces]);
+      final under = TeXFunction('_', currentNode, [TeXArg.braces]);
+      // currentNode.setCursor();
+      // currentNode.addTeX(top);
+
+      // currentNode.addTeX(under);
+
+      notifyListeners();
+    }
   }
 
   /// Add function to the current node.
   void addFunction(String tex, List<TeXArg> args) {
     currentNode.removeCursor();
+    print("addFunction: $tex, $args");
     final func = TeXFunction(tex, currentNode, args);
+    final under = TeXFunction('_', currentNode, args);
+    final top = TeXFunction('^', currentNode, args);
 
     /// Adding a pow requires further action, that's why we handle it in it's
     /// own function.
     if (tex.startsWith('^')) {
       addPow(func);
     }
+
     // The same applies for fractions.
     else if (tex == r'\frac') {
       addFrac(func);
+    } else if (tex == r'\int_') {
+      print("addFunction: int, $tex, $args");
+      currentNode.addTeX(func);
+      currentNode = func.argNodes.first;
     } else {
       currentNode.addTeX(func);
       currentNode = func.argNodes.first;
     }
     currentNode.setCursor();
+
     notifyListeners();
+    if (tex == r'\int_') {
+      goNextwithout();
+      addFunction('^', [TeXArg.braces]);
+      goBack();
+    }
   }
 
   /// Adds a pow to the current node

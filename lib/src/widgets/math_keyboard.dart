@@ -315,6 +315,7 @@ class _Buttons extends StatelessWidget {
         builder: (context, child) {
           final layout =
               controller.secondPage ? page2! : page1 ?? numberKeyboard;
+          print("layout: ${layout.first}");
           return Column(
             children: [
               for (final row in layout)
@@ -328,10 +329,13 @@ class _Buttons extends StatelessWidget {
                             flex: config.flex,
                             label: config.label,
                             onTap: config.args != null
-                                ? () => controller.addFunction(
+                                ? () {
+                                    print("addFunctionmnnn");
+                                    controller.addFunction(
                                       config.value,
                                       config.args!,
-                                    )
+                                    );
+                                  }
                                 : () => controller.addLeaf(config.value),
                             asTex: config.asTex,
                             highlightLevel: config.highlighted ? 1 : 0,

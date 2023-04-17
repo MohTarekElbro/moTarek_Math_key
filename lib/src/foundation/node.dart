@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -70,8 +71,8 @@ class TeXNode {
   }
 
   /// Adds a new node.
-  void addTeX(TeX teX) {
-    children.insert(courserPosition, teX);
+  void addTeX(TeX teX, {step = true}) {
+    children.insert(step ? courserPosition : courserPosition + 1, teX);
     courserPosition++;
   }
 

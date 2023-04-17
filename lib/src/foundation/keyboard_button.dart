@@ -122,11 +122,17 @@ final functionKeyboard = [
       asTex: true,
     ),
     const BasicKeyboardButtonConfig(
-      label: r'\Box^2',
-      value: '^2',
+      label: r'\int_{\Box}^\Box',
+      value: r'\int_',
       args: [TeXArg.braces],
       asTex: true,
     ),
+    // const BasicKeyboardButtonConfig(
+    //   label: r'\Box^2',
+    //   value: '^2',
+    //   args: [TeXArg.braces],
+    //   asTex: true,
+    // ),
     const BasicKeyboardButtonConfig(
       label: r'\Box^{\Box}',
       value: '^',
