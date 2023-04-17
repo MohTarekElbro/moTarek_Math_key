@@ -123,8 +123,8 @@ final functionKeyboard = [
     ),
     const BasicKeyboardButtonConfig(
       label: r'\int_{\Box}^\Box',
-      value: r'\int_',
-      args: [TeXArg.braces],
+      value: r'\int',
+      args: [TeXArg.power, TeXArg.subscript],
       asTex: true,
     ),
     // const BasicKeyboardButtonConfig(

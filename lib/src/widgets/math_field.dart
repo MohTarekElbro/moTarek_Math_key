@@ -739,10 +739,10 @@ class MathFieldEditingController extends ChangeNotifier {
         }
         notifyListeners();
     }
-    if (ex == "^" && state == NavigationState.end) {
-      print("moved to root");
-      goBack();
-    }
+    // if (ex == "^" && state == NavigationState.end) {
+    //   print("moved to root");
+    //   goBack();
+    // }
   }
 
   void goNextwithout() {
@@ -833,25 +833,15 @@ class MathFieldEditingController extends ChangeNotifier {
         }
         notifyListeners();
     }
-    if (ex == r"\int_") {
-      goNext();
-    }
+    // if (ex == r"\int_") {
+    //   goNext();
+    // }
   }
 
   /// Add leaf to the current node.
   void addLeaf(String tex) {
     currentNode.addTeX(TeXLeaf(tex));
     notifyListeners();
-    if (tex == r'\int') {
-      final top = TeXFunction('^', currentNode, [TeXArg.braces]);
-      final under = TeXFunction('_', currentNode, [TeXArg.braces]);
-      // currentNode.setCursor();
-      // currentNode.addTeX(top);
-
-      // currentNode.addTeX(under);
-
-      notifyListeners();
-    }
   }
 
   /// Add function to the current node.
@@ -882,11 +872,11 @@ class MathFieldEditingController extends ChangeNotifier {
     currentNode.setCursor();
 
     notifyListeners();
-    if (tex == r'\int_') {
-      goNextwithout();
-      addFunction('^', [TeXArg.braces]);
-      goBack();
-    }
+    // if (tex == r'\int_') {
+    //   goNextwithout();
+    //   addFunction('^', [TeXArg.braces]);
+    //   goBack();
+    // }
   }
 
   /// Adds a pow to the current node

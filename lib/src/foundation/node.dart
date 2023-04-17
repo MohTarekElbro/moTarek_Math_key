@@ -152,6 +152,10 @@ class TeXFunction extends TeX {
         return '{';
       case TeXArg.brackets:
         return '[';
+      case TeXArg.power:
+        return '^';
+      case TeXArg.subscript:
+        return '_';
       default:
         return '(';
     }
@@ -164,6 +168,10 @@ class TeXFunction extends TeX {
         return '}';
       case TeXArg.brackets:
         return ']';
+      case TeXArg.power:
+        return '';
+      case TeXArg.subscript:
+        return '';
       default:
         return ')';
     }
@@ -250,4 +258,7 @@ enum TeXArg {
   /// for functions like sin, cos, tan, etc. as well, so the user doesn't have
   /// to close the parentheses manually.
   parentheses,
+
+  power,
+  subscript
 }
